@@ -15,7 +15,23 @@ const port = 5000;
 
 app.use('/uploads', express.static('uploads'));
 // Cors middleware
-app.use(cors());
+// Define the allowed origins
+const allowedOrigins = ['https://task-manager-frontend-brof7jtx7-profecis-projects.vercel.app'];
+
+// Cors middleware with options
+app.use(cors({
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
+    credentials: true,  // If you need to allow cookies or authentication headers
+}));
+
 
 // Bodyparser
 app.use(express.json());
